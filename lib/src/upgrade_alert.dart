@@ -30,6 +30,8 @@ class UpgradeAlert extends StatefulWidget {
     this.showLater = true,
     this.showReleaseNotes = true,
     this.cupertinoButtonTextStyle,
+    this.titleStyle,
+    this.contentStyle,
     this.dialogKey,
     this.navigatorKey,
     this.child,
@@ -71,6 +73,12 @@ class UpgradeAlert extends StatefulWidget {
   /// The text style for the cupertino dialog buttons. Used only for
   /// [UpgradeDialogStyle.cupertino]. Optional.
   final TextStyle? cupertinoButtonTextStyle;
+
+  /// The text style for title. Optional.
+  final TextStyle? titleStyle;
+
+  /// The text style for release notes. Optional.
+  final TextStyle? contentStyle;
 
   /// The [Key] assigned to the dialog when it is shown.
   final GlobalKey? dialogKey;
@@ -146,9 +154,11 @@ class UpgradeAlertState extends State<UpgradeAlert> {
           // ignore: use_build_context_synchronously
           context: context,
           title: appMessages.message(UpgraderMessage.title),
+          titleStyle: widget.titleStyle,
           message: widget.upgrader.body(appMessages),
           releaseNotes:
               shouldDisplayReleaseNotes ? widget.upgrader.releaseNotes : null,
+          contentStyle: widget.contentStyle,
           barrierDismissible: widget.barrierDismissible,
           messages: appMessages,
         );
@@ -217,8 +227,10 @@ class UpgradeAlertState extends State<UpgradeAlert> {
     Key? key,
     required BuildContext context,
     required String? title,
+    required TextStyle? titleStyle,
     required String message,
     required String? releaseNotes,
+    required TextStyle? contentStyle,
     required bool barrierDismissible,
     required UpgraderMessages messages,
   }) {
@@ -245,8 +257,10 @@ class UpgradeAlertState extends State<UpgradeAlert> {
           child: alertDialog(
             key,
             title ?? '',
+            titleStyle,
             message,
             releaseNotes,
+            contentStyle,
             context,
             widget.dialogStyle == UpgradeDialogStyle.cupertino,
             messages,
@@ -276,8 +290,10 @@ class UpgradeAlertState extends State<UpgradeAlert> {
   Widget alertDialog(
       Key? key,
       String title,
+      TextStyle? titleStyle,
       String message,
       String? releaseNotes,
+      TextStyle? contentStyle,
       BuildContext context,
       bool cupertino,
       UpgraderMessages messages) {
@@ -298,12 +314,12 @@ class UpgradeAlertState extends State<UpgradeAlert> {
                 : CrossAxisAlignment.start,
             children: <Widget>[
               Text(messages.message(UpgraderMessage.releaseNotes) ?? '',
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
-              Text(releaseNotes),
+                  style: titleStyle ?? const TextStyle(fontWeight: FontWeight.bold)),
+              Text(releaseNotes, style: contentStyle),
             ],
           ));
     }
-    final textTitle = Text(title, key: const Key('upgrader.dialog.title'));
+    final textTitle = Text(title, key: const Key('upgrader.dialog.title'), style: titleStyle);
     final content = Container(
         constraints: const BoxConstraints(maxHeight: 400),
         child: SingleChildScrollView(
@@ -312,10 +328,10 @@ class UpgradeAlertState extends State<UpgradeAlert> {
               cupertino ? CrossAxisAlignment.center : CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text(message),
+            Text(message, style: contentStyle),
             Padding(
                 padding: const EdgeInsets.only(top: 15.0),
-                child: Text(messages.message(UpgraderMessage.prompt) ?? '')),
+                child: Text(messages.message(UpgraderMessage.prompt) ?? '', style: contentStyle,)),
             if (notes != null) notes,
           ],
         )));
