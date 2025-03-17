@@ -43,8 +43,10 @@ class MyUpgradeAlertState extends UpgradeAlertState {
   Widget alertDialog(
       Key? key,
       String title,
+      TextStyle? titleStyle,
       String message,
       String? releaseNotes,
+      TextStyle? contentStyle,
       BuildContext context,
       bool cupertino,
       UpgraderMessages messages) {
@@ -62,7 +64,7 @@ class MyUpgradeAlertState extends UpgradeAlertState {
         ),
       ),
       child: super.alertDialog(
-          key, title, message, releaseNotes, context, cupertino, messages),
+          key, title, titleStyle, message, releaseNotes, contentStyle, context, cupertino, messages),
     );
   }
 }

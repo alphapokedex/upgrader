@@ -63,23 +63,25 @@ class MyUpgradeAlertState extends UpgradeAlertState {
     required String? releaseNotes,
     required bool barrierDismissible,
     required UpgraderMessages messages,
+    required TextStyle? titleStyle,
+    required TextStyle? contentStyle,
   }) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             key: key,
-            title: const Text('Update?'),
-            content: const SingleChildScrollView(
+            title: Text('Update?', style: titleStyle),
+            content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
-                  Text('Would you like to update?'),
+                  Text('Would you like to update?', style: contentStyle,),
                 ],
               ),
             ),
             actions: <Widget>[
               TextButton(
-                child: const Text('No'),
+                child: const Text('No',),
                 onPressed: () {
                   onUserIgnored(context, true);
                 },
